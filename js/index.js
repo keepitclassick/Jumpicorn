@@ -18,6 +18,8 @@ window.onload = function () {
   canvas = document.getElementById("game-canvas");
   ctx = canvas.getContext("2d");
 
+  //setup key listeners
+  setupInputs();
   //create player
   player = new Player(100, 400);
 
