@@ -24,14 +24,31 @@ function Player(x, y) {
         this.xspeed--;
       }
       //vertical movement
+      if (upKey) {
+        this.yspeed -= 15;
+      }
+      //gravity
+      this.yspeed += 5;
       //correct speed
+      if (this.xspeed > this.maxspeed) {
+        this.xspeed = this.maxspeed;
+      } else if (this.xspeed < -this.maxspeed) {
+        this.xspeed = -this.maxspeed;
+      }
+
+      if (this.yspeed > this.maxspeed) {
+        this.yspeed = this.maxspeed;
+      } else if (this.yspeed < -this.maxspeed) {
+        this.yspeed = -this.maxspeed;
+      }
+
       this.x += this.xspeed;
       this.y += this.yspeed;
     }
   };
 
   this.draw = function () {
-    ctx.fillStyle = "green";
+    ctx.fillStyle = "purple";
     ctx.fillRect(this.x, this.y, this.width, this.height);
   };
 }
