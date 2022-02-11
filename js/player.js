@@ -4,7 +4,12 @@ function Player(x, y) {
   this.width = 50;
   this.height = 100;
 
-  this.step = function () {};
+  this.step = function () {
+    this.x++;
+  };
 
-  this.draw = function () {};
+  this.draw = function () {
+    ctx.fillStyle = "green";
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  };
 }
