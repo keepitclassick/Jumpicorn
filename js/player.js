@@ -4,9 +4,7 @@ function Player(x, y) {
   this.width = 50;
   this.height = 100;
 
-  this.step = function () {
-    this.x++;
-  };
+  this.step = function () {};
 
   this.draw = function () {
     ctx.fillStyle = "green";
