@@ -56,7 +56,7 @@ window.onload = function () {
   });
 
   function movePlayer() {
-    if (keys[38] === true) {
+    if (keys[38] === true && player.y > 310) {
       player.y -= player.speed;
       player.frameY = 6;
       player.frameX = 1;
@@ -67,13 +67,13 @@ window.onload = function () {
       player.frameY = 5;
     }
 
-    if (keys[40] === true) {
+    if (keys[40] === true && player.y < canvas.height - player.height) {
       player.y += player.speed;
 
       player.frameY = 4;
     }
 
-    if (keys[39]) {
+    if (keys[39] && player.x < canvas.width - player.width) {
       player.x += player.speed;
 
       player.frameY = 2;
