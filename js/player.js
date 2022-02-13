@@ -5,20 +5,36 @@ function Player(x, y) {
   this.yspeed = 0;
   this.friction = 0.6;
   this.maxspeed = 10;
-  this.width = "151px";
-  this.height = "100.75px";
+  playerWidth = 100;
+  playerHeight = 80;
   this.active = true;
   frameX = 0;
   frameY = 0;
   moving = false;
 
   const playerSprite = new Image();
-  playerSprite.src = "./Assets/SpriteSheet.png";
+  playerSprite.src = "./Assets/rsz_spritesheet.png";
   const background = new Image();
   background.src = "./Assets/4T_Eqv.png";
 
+  function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
+    ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
+  }
   function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+    drawSprite(
+      playerSprite,
+      0,
+      0,
+      playerWidth,
+      playerHeight,
+      0,
+      0,
+      playerWidth,
+      playerHeight
+    );
+
     requestAnimationFrame(animate);
   }
   animate();
@@ -59,10 +75,5 @@ function Player(x, y) {
       this.x += this.xspeed;
       this.y += this.yspeed;
     }
-  };
-
-  this.draw = function () {
-    ctx.fillStyle = "purple";
-    ctx.fillRect(this.x, this.y, this.width, this.height);
   };
 }
