@@ -1,48 +1,17 @@
-//drawing vars
-
-let canvas;
-let ctx;
-
-//input vars
-let upKey;
-let downKey;
-let leftKey;
-let rightKey;
-
-//game vars
-let gameLoop;
-let player;
-
 //runs when page is loaded
-window.onload = function () {
-  canvas = document.getElementById("game-canvas");
-  ctx = canvas.getContext("2d");
 
-  //setup key listeners
-  setupInputs();
-  //create player
-  player = new Player(100, 400);
+//setup key listeners
+//setupInputs();
 
-  //Start game gameLoop
-  gameLoop = setInterval(step, 1000 / 30);
-  //draw on canvas
-};
+//Start game gameLoop
 
-function step() {
+/*function step() {
   player.step();
   //draw everything
   draw();
-}
+}*/
 
-function draw() {
-  //clear the canvas
-  ctx.fillStyle = "white";
-  ctx.fillRect(0, 0, 1280, 720);
-
-  //draw player
-  player.draw();
-}
-
+/*
 function setupInputs() {
   document.addEventListener("keydown", function (e) {
     if (e.key === "w" || e.key === "ArrowUp") {
@@ -67,4 +36,42 @@ function setupInputs() {
       rightKey = false;
     }
   });
-}
+}*/
+
+/*this.step = function () {
+    //movement
+    if (this.active) {
+      //horizontal movement
+      if ((!leftKey && !rightKey) || (leftKey && rightKey)) {
+        //slow down
+        this.xspeed *= this.friction;
+      } else if (rightKey) {
+        //move right
+        this.xspeed++;
+      } else if (leftKey) {
+        //move left
+        this.xspeed--;
+      }
+      //vertical movement
+      if (upKey) {
+        this.yspeed -= 15;
+      }
+      //gravity
+      this.yspeed += 5;
+      //correct speed
+      if (this.xspeed > this.maxspeed) {
+        this.xspeed = this.maxspeed;
+      } else if (this.xspeed < -this.maxspeed) {
+        this.xspeed = -this.maxspeed;
+      }
+
+      if (this.yspeed > this.maxspeed) {
+        this.yspeed = this.maxspeed;
+      } else if (this.yspeed < -this.maxspeed) {
+        this.yspeed = -this.maxspeed;
+      }
+
+      this.x += this.xspeed;
+      this.y += this.yspeed;
+    }
+  };*/
