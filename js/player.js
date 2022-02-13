@@ -5,9 +5,23 @@ function Player(x, y) {
   this.yspeed = 0;
   this.friction = 0.6;
   this.maxspeed = 10;
-  this.width = 50;
-  this.height = 100;
+  this.width = "151px";
+  this.height = "100.75px";
   this.active = true;
+  frameX = 0;
+  frameY = 0;
+  moving = false;
+
+  const playerSprite = new Image();
+  playerSprite.src = "./Assets/SpriteSheet.png";
+  const background = new Image();
+  background.src = "./Assets/4T_Eqv.png";
+
+  function animate() {
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+    requestAnimationFrame(animate);
+  }
+  animate();
 
   this.step = function () {
     //movement
