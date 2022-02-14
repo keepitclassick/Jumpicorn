@@ -19,6 +19,7 @@ window.onload = function () {
   };
 
   const playerSprite = new Image();
+  playerSprite.src = "./Assets/idle.png";
 
   const background = new Image();
   background.src = "./Assets/4T_Eqv.png";
@@ -49,6 +50,7 @@ window.onload = function () {
       player.x -= player.speed;
       player.moving = true;
       player.frameY = 0;
+      playerSprite.src = "./Assets/walk (1).png";
     }
 
     if (keys[40] === true && player.y < canvas.height - player.height) {
@@ -103,4 +105,23 @@ window.onload = function () {
     requestAnimationFrame(animate);
   };
   animate();
+
+  class Enemy {
+    constructor() {
+      this.x = 10;
+      this.y = 50;
+      this.width = 100;
+      this.height = 100;
+    }
+  }
+
+  const enemy1 = new Enemy();
+
+  function animateEnemy() {
+    enemy1.x++;
+    enemy1.y++;
+    ctx.fillRect(enemy1.x, enemy1.y, enemy1.width, enemy1.height);
+    requestAnimationFrame(animateEnemy);
+  }
+  animateEnemy();
 };
