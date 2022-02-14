@@ -105,8 +105,8 @@ window.onload = function () {
     requestAnimationFrame(animate);
   };
   animate();
-
-  const numberOfEnemies = Math.random() * 20 - 2;
+  //generate enemies
+  const numberOfEnemies = Math.random() * 30 - 2;
   const enemiesArray = [];
   let gameFrame = 0;
 
@@ -123,12 +123,14 @@ window.onload = function () {
       this.height = this.enemyHeight / 2.5;
       this.frame = 0;
       this.movementSpeed = Math.floor(Math.random() * 3 + 1);
-      this.angle = 0;
+      this.angle = Math.random() * 2;
+      this.angleSpeed = Math.random() * 0.2;
+      this.curve = Math.random() * 7;
     }
     update() {
       this.x -= this.speed;
-      this.y += Math.sin(this.angle);
-      this.angle += 0.2;
+      this.y += this.curve * Math.sin(this.angle);
+      this.angle += 0.1;
       if (this.x + this.width < 0) {
         this.x = canvas.width;
       }
