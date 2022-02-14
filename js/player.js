@@ -41,30 +41,44 @@ window.onload = function () {
       player.y -= player.speed;
       player.frameY = 0;
       console.log(keys);
+      player.moving = true;
       playerSprite.src = "./Assets/jump.png";
     }
 
     if (keys[37] === true && player.x > 0) {
       player.x -= player.speed;
+      player.moving = true;
       player.frameY = 0;
     }
 
     if (keys[40] === true && player.y < canvas.height - player.height) {
       player.y += player.speed;
       player.frameY = 0;
+      player.moving = true;
+      playerSprite.src = "./Assets/fall.png";
     }
     if (keys[39] && player.x < canvas.width - player.width) {
       player.x += player.speed;
       player.frameY = 0;
+      player.moving = true;
       playerSprite.src = "./Assets/walk (1).png";
     }
 
     if (keys[39] && keys[32] && player.x < canvas.width - player.width) {
       player.x += player.speed;
       player.frameY = 0;
+      player.moving = true;
       playerSprite.src = "./Assets/run.png";
     }
+
+    if (keys[32]) {
+      player.x += player.speed;
+      player.frameY = 0;
+      player.moving = true;
+      playerSprite.src = "./Assets/spinjump.png";
+    }
   }
+
   function handlePlayerFrame() {
     if (player.frameX < 7 && player.moving) player.frameX++;
     else player.frameX = 0;
