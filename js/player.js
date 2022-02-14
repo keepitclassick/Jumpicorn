@@ -112,7 +112,6 @@ window.onload = function () {
 
   class Enemy {
     constructor() {
-      this.x = Math.random() * canvas.width;
       this.y = 650;
       this.image = new Image();
       this.image.src = "./Assets/enemy2.png";
@@ -120,12 +119,19 @@ window.onload = function () {
       this.enemyWidth = 133;
       this.enemyHeight = 94;
       this.width = this.enemyWidth / 2.5;
+      this.x = Math.random() * (canvas.width - this.enemyWidth);
       this.height = this.enemyHeight / 2.5;
       this.frame = 0;
       this.movementSpeed = Math.floor(Math.random() * 3 + 1);
+      this.angle = 0;
     }
     update() {
-      this.x += this.speed;
+      this.x -= this.speed;
+      this.y += Math.sin(this.angle);
+      this.angle += 0.2;
+      if (this.x + this.width < 0) {
+        this.x = canvas.width;
+      }
       //animate enemy
       if (gameFrame % this.movementSpeed === 0) {
         this.frame > 4 ? (this.frame = 0) : this.frame++;
