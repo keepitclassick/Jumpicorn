@@ -106,22 +106,36 @@ window.onload = function () {
   };
   animate();
 
+  const numberOfEnemies = 10;
+  const enemiesArray = [];
+
   class Enemy {
     constructor() {
-      this.x = 10;
-      this.y = 50;
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
       this.width = 100;
       this.height = 100;
+      this.speed = Math.random() * 4 - 2;
+    }
+    update() {
+      this.x += this.speed;
+      this.y += this.speed;
+    }
+    draw() {
+      ctx.fillRect(this.x, this.y, this.width, this.height);
     }
   }
 
-  const enemy1 = new Enemy();
+  for (let i = 0; i < numberOfEnemies; i++) {
+    enemiesArray.push(new Enemy());
+  }
 
   function animateEnemy() {
-    enemy1.x++;
-    enemy1.y++;
-    ctx.fillRect(enemy1.x, enemy1.y, enemy1.width, enemy1.height);
     requestAnimationFrame(animateEnemy);
+    enemiesArray.forEach((enemy) => {
+      enemy.update();
+      enemy.draw();
+    });
   }
   animateEnemy();
 };
