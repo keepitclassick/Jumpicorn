@@ -19,7 +19,6 @@ window.onload = function () {
   };
 
   const playerSprite = new Image();
-  playerSprite.src = "./Assets/walk (1).png";
 
   const background = new Image();
   background.src = "./Assets/4T_Eqv.png";
@@ -54,10 +53,16 @@ window.onload = function () {
       player.y += player.speed;
       player.frameY = 0;
     }
-
     if (keys[39] && player.x < canvas.width - player.width) {
       player.x += player.speed;
       player.frameY = 0;
+      playerSprite.src = "./Assets/walk (1).png";
+    }
+
+    if (keys[39] && keys[32] && player.x < canvas.width - player.width) {
+      player.x += player.speed;
+      player.frameY = 0;
+      playerSprite.src = "./Assets/run.png";
     }
   }
   function handlePlayerFrame() {
