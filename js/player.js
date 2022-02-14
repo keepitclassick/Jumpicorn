@@ -106,23 +106,44 @@ window.onload = function () {
   };
   animate();
 
-  const numberOfEnemies = 10;
+  const numberOfEnemies = Math.random() * 20 - 2;
   const enemiesArray = [];
+  let gameFrame = 0;
 
   class Enemy {
     constructor() {
       this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
-      this.width = 100;
-      this.height = 100;
+      this.y = 650;
+      this.image = new Image();
+      this.image.src = "./Assets/enemy2.png";
       this.speed = Math.random() * 4 - 2;
+      this.enemyWidth = 133;
+      this.enemyHeight = 94;
+      this.width = this.enemyWidth / 2.5;
+      this.height = this.enemyHeight / 2.5;
+      this.frame = 0;
+      this.movementSpeed = Math.floor(Math.random() * 3 + 1);
     }
     update() {
       this.x += this.speed;
-      this.y += this.speed;
+      //animate enemy
+      if (gameFrame % this.movementSpeed === 0) {
+        this.frame > 4 ? (this.frame = 0) : this.frame++;
+      }
     }
+
     draw() {
-      ctx.fillRect(this.x, this.y, this.width, this.height);
+      ctx.drawImage(
+        this.image,
+        this.frame * this.enemyWidth,
+        0,
+        this.enemyWidth,
+        this.enemyHeight,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
     }
   }
 
