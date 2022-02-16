@@ -22,9 +22,6 @@ window.onload = function () {
   const playerSprite = new Image();
   playerSprite.src = "./Assets/idle.png";
 
-  const background = new Image();
-  background.src = "./Assets/4T_Eqv.png";
-
   let drawSprite = function (img, sX, sY, sW, sH, dX, dY, dW, dH) {
     ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
   };
@@ -82,14 +79,32 @@ window.onload = function () {
     }
   }
 
-  function handlePlayerFrame() {
-    if (player.frameX < 7 && player.moving) player.frameX++;
-    else player.frameX = 0;
+  class Background {
+    constructor(gameWidth, gameHeight) {
+      this.gameWidth = gameWidth;
+      this.gameHeight = gameHeight;
+      this.image = document.getElementById("background");
+      this.x = 0;
+      this.y = 0;
+      this.width = canvas.width;
+      this.height = canvas.height;
+      this.speed = 20;
+    }
+
+    draw(context) {
+      context.drawImage(this.image, this.x, this.y, this.width, this.height);
+    }
+    update() {
+      this.x -= this.speed;
+      if (this.x < 0 - this.width) this.x = 0;
+    }
   }
+  const backgroundImage = new Background(canvas.width, canvas.height);
 
   animate = function () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+    backgroundImage.draw(ctx);
+    backgroundImage.update();
     drawSprite(
       playerSprite,
       player.width * player.frameX,
@@ -101,11 +116,18 @@ window.onload = function () {
       player.width,
       player.height
     );
+
     movePlayer();
     handlePlayerFrame();
+
     requestAnimationFrame(animate);
   };
   animate();
+  function handlePlayerFrame() {
+    if (player.frameX < 7 && player.moving) player.frameX++;
+    else player.frameX = 0;
+  }
+
   //generate enemies
   const numberOfEnemies = Math.random() * 30 - 2;
   const enemiesArray = [];
@@ -168,21 +190,4 @@ window.onload = function () {
     });
   }
   animateEnemy();
-
-  class Background {
-    constructor(gameWidth, gameHeight) {
-      this.gameWidth = gameWidth;
-      this.gameHeight = gameHeight;
-      this.image = document.getElementById("background");
-      this.x = 0;
-      this.y = 0;
-      this.width = canvas.width;
-      this.height = canvas.height;
-      this.speed = 20;
-    }
-
-    draw(context) {
-      context.drawImage(this.image, this.x, this.y, this.width, this.height);
-    }
-  }
 };
