@@ -17,6 +17,7 @@ window.onload = function () {
     speed: 9,
     moving: false,
     velocity: 0,
+    weight: 0,
   };
 
   const playerSprite = new Image();
@@ -75,8 +76,12 @@ window.onload = function () {
       player.x += player.speed;
       player.frameY = 0;
       player.moving = true;
+      player.velocity = -30;
       playerSprite.src = "./Assets/spinjump.png";
     }
+
+    //vertical movement
+    player.y += player.velocity;
   }
 
   class Background {
@@ -88,11 +93,19 @@ window.onload = function () {
       this.y = 0;
       this.width = canvas.width;
       this.height = canvas.height;
-      this.speed = 20;
+      this.speed = 10;
     }
 
     draw(context) {
       context.drawImage(this.image, this.x, this.y, this.width, this.height);
+      context.drawImage(
+        this.image,
+        this.x + this.width,
+        this.y,
+        this.width,
+        this.height
+      );
+      ``;
     }
     update() {
       this.x -= this.speed;
