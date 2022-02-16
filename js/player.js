@@ -17,7 +17,7 @@ window.onload = function () {
     speed: 9,
     moving: false,
     velocity: 0,
-    weight: 0,
+    weight: 1,
   };
 
   const playerSprite = new Image();
@@ -76,13 +76,22 @@ window.onload = function () {
       player.x += player.speed;
       player.frameY = 0;
       player.moving = true;
-      player.velocity = -30;
+      player.velocity = -10;
       playerSprite.src = "./Assets/spinjump.png";
     }
 
     //vertical movement
     player.y += player.velocity;
+    if (!onGround()) {
+      player.velocity += player.weight;
+    } else {
+      player.velocity = 0;
+    }
   }
+
+  onGround = () => {
+    return player.y >= canvas.height - player.height;
+  };
 
   class Background {
     constructor(gameWidth, gameHeight) {
@@ -105,7 +114,6 @@ window.onload = function () {
         this.width,
         this.height
       );
-      ``;
     }
     update() {
       this.x -= this.speed;
@@ -142,7 +150,7 @@ window.onload = function () {
   }
 
   //generate enemies
-  const numberOfEnemies = Math.random() * 30 - 2;
+  const numberOfEnemies = Math.random() * 10 - 2;
   const enemiesArray = [];
   let gameFrame = 0;
 
