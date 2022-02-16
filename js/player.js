@@ -169,17 +169,20 @@ window.onload = function () {
   }
   animateEnemy();
 
-
   class Background {
     constructor(gameWidth, gameHeight) {
       this.gameWidth = gameWidth;
       this.gameHeight = gameHeight;
-      this.image = document.getElementById('background')
-      this.x =0,
-      this.y=0,
-      this.width=canvas.width, 
-      this.height=canvas.height,
-      this.speed= 20,
+      this.image = document.getElementById("background");
+      this.x = 0;
+      this.y = 0;
+      this.width = canvas.width;
+      this.height = canvas.height;
+      this.speed = 20;
+    }
+
+    draw(context) {
+      context.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
   }
 };
