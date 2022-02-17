@@ -126,7 +126,7 @@ window.onload = function () {
     }
   }
   const backgroundImage = new Background(canvas.width, canvas.height);
-  const score = 0;
+  let score = 0;
   animate = function () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     backgroundImage.draw(ctx);
@@ -155,7 +155,7 @@ window.onload = function () {
   }
 
   //generate enemies
-  const numberOfEnemies = Math.random() * 10 - 2;
+  const numberOfEnemies = Math.random() * 20 - 2;
   const enemiesArray = [];
   let gameFrame = 0;
 
@@ -182,6 +182,7 @@ window.onload = function () {
       this.angle += 0.1;
       if (this.x + this.width < 0) {
         this.x = canvas.width;
+        score++;
       }
 
       //animate enemy
