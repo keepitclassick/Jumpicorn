@@ -186,13 +186,14 @@ window.onload = function () {
         score++;
       }
 
-      //animate enemy
+      //animate enemy frames
       if (gameFrame % this.movementSpeed === 0) {
         this.frame > 4 ? (this.frame = 0) : this.frame++;
       }
     }
 
     draw() {
+      ctx.strokeRect(this.x, this.y, this.enemyWidth, this.enemyHeight);
       ctx.drawImage(
         this.image,
         this.frame * this.enemyWidth,
