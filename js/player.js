@@ -9,7 +9,7 @@ window.onload = function () {
 
   const player = {
     x: 200,
-    y: 600,
+    y: 650,
     width: 64,
     height: 128,
     frameX: 0,
@@ -19,6 +19,7 @@ window.onload = function () {
     velocity: 0,
     weight: 1,
   };
+  console.log(player.y);
 
   const playerSprite = new Image();
   playerSprite.src = "./Assets/idle.png";
@@ -107,7 +108,7 @@ window.onload = function () {
       this.y = 0;
       this.width = canvas.width;
       this.height = canvas.height;
-      this.speed = 10;
+      this.speed = 5;
     }
 
     draw(context) {
@@ -143,6 +144,7 @@ window.onload = function () {
       player.width,
       player.height
     );
+    ctx.strokeStyle = "white";
     ctx.strokeRect(player.x, player.y, player.width, player.height);
 
     movePlayer();
@@ -163,15 +165,15 @@ window.onload = function () {
 
   class Enemy {
     constructor() {
-      this.y = 650;
+      this.y = 500;
       this.image = new Image();
       this.image.src = "./Assets/enemy2.png";
       this.speed = Math.random() * 4 - 2;
       this.enemyWidth = 133;
       this.enemyHeight = 94;
-      this.width = this.enemyWidth / 2.5;
+      this.width = this.enemyWidth / 2;
       this.x = Math.random() * (canvas.width - this.enemyWidth);
-      this.height = this.enemyHeight / 2.5;
+      this.height = this.enemyHeight / 2;
       this.frame = 0;
       this.movementSpeed = Math.floor(Math.random() * 3 + 1);
       this.angle = Math.random() * 2;
@@ -194,7 +196,7 @@ window.onload = function () {
     }
 
     draw() {
-      ctx.strokeRect(this.x, this.y, this.enemyWidth, this.enemyHeight);
+      ctx.strokeRect(this.x, this.y, this.enemyWidth / 2, this.enemyHeight / 2);
       ctx.drawImage(
         this.image,
         this.frame * this.enemyWidth,
