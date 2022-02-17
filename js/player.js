@@ -127,6 +127,7 @@ window.onload = function () {
   }
   const backgroundImage = new Background(canvas.width, canvas.height);
   let score = 0;
+
   animate = function () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     backgroundImage.draw(ctx);
@@ -223,5 +224,9 @@ window.onload = function () {
     ctx.fillStyle = "black";
     ctx.font = "40px helvetica";
     ctx.fillText("Score: " + score, 20, 50);
+
+    ctx.fillStyle = "white";
+    ctx.font = "40px helvetica";
+    ctx.fillText("Score: " + score, 20, 52);
   }
 };
