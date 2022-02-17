@@ -72,11 +72,11 @@ window.onload = function () {
       playerSprite.src = "./Assets/run.png";
     }
 
-    if (keys[32]) {
+    if (keys[32] && onGround()) {
       player.x += player.speed;
       player.frameY = 0;
       player.moving = true;
-      player.velocity = -10;
+      player.velocity = -30;
       playerSprite.src = "./Assets/spinjump.png";
     }
 
@@ -86,6 +86,11 @@ window.onload = function () {
       player.velocity += player.weight;
     } else {
       player.velocity = 0;
+    }
+
+    //add vertical boundary
+    if (player.y > canvas.height - player.height) {
+      player.y = canvas.height - player.height;
     }
   }
 
@@ -121,7 +126,7 @@ window.onload = function () {
     }
   }
   const backgroundImage = new Background(canvas.width, canvas.height);
-
+  const score = 0;
   animate = function () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     backgroundImage.draw(ctx);
@@ -140,7 +145,7 @@ window.onload = function () {
 
     movePlayer();
     handlePlayerFrame();
-
+    displayStatus(ctx);
     requestAnimationFrame(animate);
   };
   animate();
@@ -178,6 +183,7 @@ window.onload = function () {
       if (this.x + this.width < 0) {
         this.x = canvas.width;
       }
+
       //animate enemy
       if (gameFrame % this.movementSpeed === 0) {
         this.frame > 4 ? (this.frame = 0) : this.frame++;
@@ -211,4 +217,10 @@ window.onload = function () {
     });
   }
   animateEnemy();
+
+  function displayStatus() {
+    ctx.fillStyle = "black";
+    ctx.font = "40px helvetica";
+    ctx.fillText("Score: " + score, 20, 50);
+  }
 };
