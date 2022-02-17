@@ -11,7 +11,7 @@ window.onload = function () {
     x: 200,
     y: 650,
     width: 64,
-    height: 128,
+    height: 170,
     frameX: 0,
     frameY: 0,
     speed: 9,
@@ -145,7 +145,21 @@ window.onload = function () {
       player.height
     );
     ctx.strokeStyle = "white";
-    ctx.strokeRect(player.x, player.y, player.width, player.height);
+    ctx.strokeRect(
+      player.x,
+      player.y + player.height / 4,
+      player.width,
+      player.height / 2
+    );
+    ctx.beginPath();
+    ctx.arc(
+      player.x + player.width / 2,
+      player.y + player.height / 2,
+      player.width / 2,
+      0,
+      Math.PI * 2
+    );
+    ctx.stroke();
 
     movePlayer();
     handlePlayerFrame();
