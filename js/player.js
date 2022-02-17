@@ -152,12 +152,14 @@ window.onload = function () {
       player.height / 2
     );
     ctx.beginPath();
-    ctx.arc(
+    ctx.ellipse(
       player.x + player.width / 2,
       player.y + player.height / 2,
-      player.width / 2,
+      player.width / 2.5,
+      player.height / 3.5,
+      Math.PI / 200,
       0,
-      Math.PI * 2
+      2 * Math.PI
     );
     ctx.stroke();
 
