@@ -143,6 +143,7 @@ window.onload = function () {
       player.width,
       player.height
     );
+    ctx.strokeRect(player.x, player.y, player.width, player.height);
 
     movePlayer();
     handlePlayerFrame();
