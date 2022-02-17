@@ -3,6 +3,12 @@ window.onload = function () {
   const ctx = canvas.getContext("2d");
   canvas.width = 1280;
   canvas.height = 800;
+  const numberOfEnemies = Math.random() * 10 - 2;
+  const enemiesArray = [];
+  let gameFrame = 0;
+  let score = 0;
+  let gameOver = false;
+  let lives = 5;
 
   //var to keep track of keys pressed
   keys = [];
@@ -37,7 +43,20 @@ window.onload = function () {
     player.moving = false;
   });
 
-  function movePlayer() {
+  function movePlayer(enemies) {
+    //collision detection
+    enemies.forEach((enemy) => {
+      const distanceX = enemy.x - player.x;
+      const distanceY = enemy.y - player.y;
+
+      const fullDistance = Math.sqrt(
+        distanceX * distanceX + distanceY * distanceY
+      );
+      if (fullDistance < enemy.width / 2 + player.width / 2) {
+        gameOver = true;
+      }
+    });
+
     if (keys[38] === true && player.y > 310) {
       player.y -= player.speed;
       player.frameY = 0;
@@ -95,6 +114,7 @@ window.onload = function () {
     }
   }
 
+  //check if player is on the ground
   onGround = () => {
     return player.y >= canvas.height - player.height;
   };
@@ -127,7 +147,6 @@ window.onload = function () {
     }
   }
   const backgroundImage = new Background(canvas.width, canvas.height);
-  let score = 0;
 
   animate = function () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -163,10 +182,10 @@ window.onload = function () {
     );
     ctx.stroke();
 
-    movePlayer();
+    movePlayer(enemiesArray);
     handlePlayerFrame();
     displayStatus(ctx);
-    requestAnimationFrame(animate);
+    if (!gameOver) requestAnimationFrame(animate);
   };
   animate();
   function handlePlayerFrame() {
@@ -175,9 +194,6 @@ window.onload = function () {
   }
 
   //generate enemies
-  const numberOfEnemies = Math.random() * 20 - 2;
-  const enemiesArray = [];
-  let gameFrame = 0;
 
   class Enemy {
     constructor() {
@@ -248,5 +264,24 @@ window.onload = function () {
     ctx.fillStyle = "white";
     ctx.font = "40px helvetica";
     ctx.fillText("Score: " + score, 20, 52);
+
+    ctx.fillStyle = "black";
+    ctx.font = "40px helvetica";
+    ctx.fillText("Lives: " + lives, 20, 100);
+
+    ctx.fillStyle = "white";
+    ctx.font = "40px helvetica";
+    ctx.fillText("Lives: " + lives, 20, 102);
+
+    if (gameOver) {
+      ctx.textAlign = "center";
+      ctx.font = "40px helvetica";
+      ctx.fillStyle = "black";
+      ctx.fillText("Game Over!", canvas.width / 2, 200);
+      ctx.textAlign = "center";
+      ctx.font = "40px helvetica";
+      ctx.fillStyle = "white";
+      ctx.fillText("Game Over!", canvas.width / 2, 202);
+    }
   }
 };
