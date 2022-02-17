@@ -46,13 +46,15 @@ window.onload = function () {
   function movePlayer(enemies) {
     //collision detection
     enemies.forEach((enemy) => {
-      const distanceX = enemy.x - player.x;
-      const distanceY = enemy.y - player.y;
+      const distanceX =
+        enemy.x + enemy.enemyWidth / 2 - (player.x + player.width);
+      const distanceY =
+        enemy.y + enemy.enemyHeight / 2 - (player.y + player.height / 2);
 
       const fullDistance = Math.sqrt(
         distanceX * distanceX + distanceY * distanceY
       );
-      if (fullDistance < enemy.width / 2 + player.width / 2) {
+      if (fullDistance < enemy.enemyWidth / 3 + player.width / 3) {
         gameOver = true;
       }
     });
@@ -164,12 +166,7 @@ window.onload = function () {
       player.height
     );
     ctx.strokeStyle = "white";
-    ctx.strokeRect(
-      player.x,
-      player.y + player.height / 4,
-      player.width,
-      player.height / 2
-    );
+
     ctx.beginPath();
     ctx.ellipse(
       player.x + player.width / 2,
@@ -181,13 +178,13 @@ window.onload = function () {
       2 * Math.PI
     );
     ctx.stroke();
-
     movePlayer(enemiesArray);
     handlePlayerFrame();
     displayStatus(ctx);
     if (!gameOver) requestAnimationFrame(animate);
   };
   animate();
+
   function handlePlayerFrame() {
     if (player.frameX < 7 && player.moving) player.frameX++;
     else player.frameX = 0;
@@ -213,14 +210,15 @@ window.onload = function () {
       this.curve = Math.random() * 7;
     }
     update() {
-      this.x -= this.speed;
-      this.y += this.curve * Math.sin(this.angle);
-      this.angle += 0.1;
-      if (this.x + this.width < 0) {
-        this.x = canvas.width;
-        score++;
+      if (!gameOver) {
+        this.x -= this.speed;
+        this.y += this.curve * Math.sin(this.angle);
+        this.angle += 0.1;
+        if (this.x + this.width < 0) {
+          this.x = canvas.width;
+          score++;
+        }
       }
-
       //animate enemy frames
       if (gameFrame % this.movementSpeed === 0) {
         this.frame > 4 ? (this.frame = 0) : this.frame++;
