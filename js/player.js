@@ -307,6 +307,27 @@ window.onload = function () {
       this.sound = new Audio();
       this.sound.src = "./Assets/boom8.wav";
       this.timeSinceLastFrame = 0;
+      this.frameInterval = 200;
+    }
+    update(deltaTime) {
+      if (this.frame === 0) this.sound.play();
+      this.timeSinceLastFrame += deltaTime;
+      if (this.timeSinceLastFrame > this.frameInterval) {
+        this.frame++;
+      }
+    }
+    draw() {
+      ctx.drawImage(
+        this.image,
+        this.frame * this.spriteWidth,
+        0,
+        this.spriteWidth,
+        this.spriteHeight,
+        this.x,
+        this.y,
+        this.size,
+        this.size
+      );
     }
   }
 };
