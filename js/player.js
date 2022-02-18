@@ -4,10 +4,10 @@ window.onload = function () {
   canvas.width = 1280;
   canvas.height = 800;
   let enemyTimer = 0;
-  let enemyInterval = 1000;
+  let enemyInterval = 2000;
   let lastTime = 0;
   const numberOfEnemies = Math.random() * 10 - 2;
-  const enemiesArray = [];
+  let enemiesArray = [];
   let gameFrame = 0;
   let score = 0;
   let gameOver = false;
@@ -43,10 +43,6 @@ window.onload = function () {
   window.addEventListener("keyup", (e) => {
     delete keys[e.keyCode];
     player.moving = false;
-  });
-
-  window.addEventListener("click", (e) => {
-    gameOver = false;
   });
 
   function movePlayer(enemies) {
@@ -158,7 +154,7 @@ window.onload = function () {
 
   class Enemy {
     constructor() {
-      this.y = 500;
+      this.y = Math.random() * canvas.height - 100;
       this.image = new Image();
       this.image.src = "./Assets/enemy2.png";
       this.speed = Math.random() * 4 - 2;
@@ -172,6 +168,7 @@ window.onload = function () {
       this.angle = Math.random() * 2;
       this.angleSpeed = Math.random() * 0.2;
       this.curve = Math.random() * 7;
+      this.markedForDeletion = false;
     }
     update() {
       if (!gameOver) {
@@ -182,6 +179,7 @@ window.onload = function () {
           this.x = canvas.width;
           score++;
         }
+        if (this.x < 0 - this.width) this.markedForDeletion = true;
       }
       //animate enemy frames
       if (gameFrame % this.movementSpeed === 0) {
@@ -209,12 +207,14 @@ window.onload = function () {
     let deltaTime = timestamp - lastTime;
     lastTime = timestamp;
     enemyTimer += deltaTime;
-    if (enemyTimer > enemyInterval) {
+    if (enemyTimer > enemyInterval && enemiesArray.length < 10) {
       enemiesArray.push(new Enemy());
+      console.log("enemies:", enemiesArray.length);
     }
     [...enemiesArray].forEach((enemy) => enemy.update());
     [...enemiesArray].forEach((enemy) => enemy.draw());
-
+    enemiesArray = enemiesArray.filter((obj) => !obj.markedForDeletion);
+    console.log("deleted:", enemiesArray);
     backgroundImage.draw(ctx);
     backgroundImage.update();
     drawSprite(
@@ -290,6 +290,23 @@ window.onload = function () {
       ctx.font = "40px helvetica";
       ctx.fillStyle = "white";
       ctx.fillText("Game Over!", canvas.width / 2, 202);
+    }
+  }
+
+  let explosions = [];
+  class Explosion {
+    constructor(x, y, size) {
+      this.image = new Image();
+      this.image.src = "./Assets/boom.png";
+      this.spriteWidth = 200;
+      this.spriteHeight = 179;
+      this.size = size;
+      this.x = x;
+      this.y = y;
+      this.frame = 0;
+      this.sound = new Audio();
+      this.sound.src = "./Assets/boom8.wav";
+      this.timeSinceLastFrame = 0;
     }
   }
 };
