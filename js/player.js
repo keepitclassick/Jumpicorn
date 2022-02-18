@@ -3,12 +3,14 @@ window.onload = function () {
   const ctx = canvas.getContext("2d");
   canvas.width = 1280;
   canvas.height = 800;
+  let enemyTimer = 0;
+  let enemyInterval = 1000;
+  let lastTime = 0;
   const numberOfEnemies = Math.random() * 10 - 2;
   const enemiesArray = [];
   let gameFrame = 0;
   let score = 0;
   let gameOver = false;
-  let lives = 5;
 
   //var to keep track of keys pressed
   keys = [];
@@ -24,8 +26,8 @@ window.onload = function () {
     moving: false,
     velocity: 0,
     weight: 1,
+    lives: 5,
   };
-  console.log(player.y);
 
   const playerSprite = new Image();
   playerSprite.src = "./Assets/idle.png";
@@ -43,6 +45,10 @@ window.onload = function () {
     player.moving = false;
   });
 
+  window.addEventListener("click", (e) => {
+    gameOver = false;
+  });
+
   function movePlayer(enemies) {
     //collision detection
     enemies.forEach((enemy) => {
@@ -58,7 +64,7 @@ window.onload = function () {
         gameOver = true;
       }
     });
-
+    //assign correct asset to each movement
     if (keys[38] === true && player.y > 310) {
       player.y -= player.speed;
       player.frameY = 0;
@@ -99,7 +105,7 @@ window.onload = function () {
       player.frameY = 0;
       player.moving = true;
       player.velocity = -30;
-      playerSprite.src = "./Assets/spinjump.png";
+      playerSprite.src = "./Assets/jump.png";
     }
 
     //vertical movement
@@ -150,48 +156,6 @@ window.onload = function () {
   }
   const backgroundImage = new Background(canvas.width, canvas.height);
 
-  animate = function () {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    backgroundImage.draw(ctx);
-    backgroundImage.update();
-    drawSprite(
-      playerSprite,
-      player.width * player.frameX,
-      player.height * player.frameY,
-      player.width,
-      player.height,
-      player.x,
-      player.y,
-      player.width,
-      player.height
-    );
-    ctx.strokeStyle = "white";
-
-    ctx.beginPath();
-    ctx.ellipse(
-      player.x + player.width / 2,
-      player.y + player.height / 2,
-      player.width / 2.5,
-      player.height / 3.5,
-      Math.PI / 200,
-      0,
-      2 * Math.PI
-    );
-    ctx.stroke();
-    movePlayer(enemiesArray);
-    handlePlayerFrame();
-    displayStatus(ctx);
-    if (!gameOver) requestAnimationFrame(animate);
-  };
-  animate();
-
-  function handlePlayerFrame() {
-    if (player.frameX < 7 && player.moving) player.frameX++;
-    else player.frameX = 0;
-  }
-
-  //generate enemies
-
   class Enemy {
     constructor() {
       this.y = 500;
@@ -211,7 +175,7 @@ window.onload = function () {
     }
     update() {
       if (!gameOver) {
-        this.x -= this.speed;
+        this.x += this.speed;
         this.y += this.curve * Math.sin(this.angle);
         this.angle += 0.1;
         if (this.x + this.width < 0) {
@@ -226,7 +190,6 @@ window.onload = function () {
     }
 
     draw() {
-      ctx.strokeRect(this.x, this.y, this.enemyWidth / 2, this.enemyHeight / 2);
       ctx.drawImage(
         this.image,
         this.frame * this.enemyWidth,
@@ -241,9 +204,56 @@ window.onload = function () {
     }
   }
 
-  for (let i = 0; i < numberOfEnemies; i++) {
-    enemiesArray.push(new Enemy());
+  animate = function (timestamp) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let deltaTime = timestamp - lastTime;
+    lastTime = timestamp;
+    enemyTimer += deltaTime;
+    if (enemyTimer > enemyInterval) {
+      enemiesArray.push(new Enemy());
+    }
+    [...enemiesArray].forEach((enemy) => enemy.update());
+    [...enemiesArray].forEach((enemy) => enemy.draw());
+
+    backgroundImage.draw(ctx);
+    backgroundImage.update();
+    drawSprite(
+      playerSprite,
+      player.width * player.frameX,
+      player.height * player.frameY,
+      player.width,
+      player.height,
+      player.x,
+      player.y,
+      player.width,
+      player.height
+    );
+    ctx.strokeStyle = "white";
+
+    /*ctx.beginPath();
+    ctx.ellipse(
+      player.x + player.width / 2,
+      player.y + player.height / 2,
+      player.width / 2.5,
+      player.height / 3.5,
+      Math.PI / 200,
+      0,
+      2 * Math.PI
+    );
+    ctx.stroke();*/
+    movePlayer(enemiesArray);
+    handlePlayerFrame();
+    displayStatus(ctx);
+    if (!gameOver) requestAnimationFrame(animate);
+  };
+  animate(0);
+
+  function handlePlayerFrame() {
+    if (player.frameX < 7 && player.moving) player.frameX++;
+    else player.frameX = 0;
   }
+
+  //generate enemies
 
   function animateEnemy() {
     requestAnimationFrame(animateEnemy);
@@ -265,11 +275,11 @@ window.onload = function () {
 
     ctx.fillStyle = "black";
     ctx.font = "40px helvetica";
-    ctx.fillText("Lives: " + lives, 20, 100);
+    ctx.fillText("Lives: " + player.lives, 20, 100);
 
     ctx.fillStyle = "white";
     ctx.font = "40px helvetica";
-    ctx.fillText("Lives: " + lives, 20, 102);
+    ctx.fillText("Lives: " + player.lives, 20, 102);
 
     if (gameOver) {
       ctx.textAlign = "center";
