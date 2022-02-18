@@ -72,6 +72,13 @@ window.onload = function () {
       if (gameFrame % this.movementSpeed === 0) {
         this.frame > 4 ? (this.frame = 0) : this.frame++;
       }
+      if (this.x + this.width < 0) {
+        this.x = canvas.width;
+        player.lives--;
+      }
+      if (player.lives === 0) {
+        gameOver = true;
+      }
     }
 
     draw() {
@@ -111,7 +118,9 @@ window.onload = function () {
       this.timeSinceLastFrame += deltaTime;
       if (this.timeSinceLastFrame > this.frameInterval) {
         this.frame++;
-        if (this.frame > 5) this.markedForDeletion = true;
+      }
+      if (this.frame > 5) {
+        this.markedForDeletion = true;
       }
     }
     draw() {
@@ -249,7 +258,7 @@ window.onload = function () {
       enemiesArray.push(new Enemy());
     }
     [...enemiesArray, ...explosions].forEach((obj) => obj.update(deltaTime));
-    [...enemiesArray, ...explosions].forEach((obj) => obj.draw(deltaTime));
+    [...enemiesArray, ...explosions].forEach((obj) => obj.draw());
     enemiesArray = enemiesArray.filter((obj) => !obj.markedForDeletion);
     explosions = explosions.filter((obj) => !obj.markedForDeletion);
 
@@ -297,6 +306,7 @@ window.onload = function () {
     requestAnimationFrame(animateEnemy);
     enemiesArray.forEach((enemy) => {
       enemy.update();
+
       enemy.draw();
     });
   }
