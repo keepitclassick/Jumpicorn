@@ -11,9 +11,123 @@ window.onload = function () {
   let gameFrame = 0;
   let score = 0;
   let gameOver = false;
+  let keys = [];
 
-  //var to keep track of keys pressed
-  keys = [];
+  class Background {
+    constructor(gameWidth, gameHeight) {
+      this.gameWidth = gameWidth;
+      this.gameHeight = gameHeight;
+      this.image = document.getElementById("background");
+      this.x = 0;
+      this.y = 0;
+      this.width = canvas.width;
+      this.height = canvas.height;
+      this.speed = 5;
+    }
+
+    draw(context) {
+      context.drawImage(this.image, this.x, this.y, this.width, this.height);
+      context.drawImage(
+        this.image,
+        this.x + this.width,
+        this.y,
+        this.width,
+        this.height
+      );
+    }
+    update() {
+      this.x -= this.speed;
+      if (this.x < 0 - this.width) this.x = 0;
+    }
+  }
+  const backgroundImage = new Background(canvas.width, canvas.height);
+
+  class Enemy {
+    constructor() {
+      this.y = Math.random() * canvas.height - 100;
+      this.image = new Image();
+      this.image.src = "./Assets/enemy2.png";
+      this.speed = Math.random() * 4 - 2;
+      this.enemyWidth = 133;
+      this.enemyHeight = 94;
+      this.width = this.enemyWidth / 2;
+      this.x = Math.random() * (canvas.width - this.enemyWidth);
+      this.height = this.enemyHeight / 2;
+      this.frame = 0;
+      this.movementSpeed = Math.floor(Math.random() * 3 + 1);
+      this.angle = Math.random() * 2;
+      this.angleSpeed = Math.random() * 0.2;
+      this.curve = Math.random() * 7;
+      this.markedForDeletion = false;
+    }
+    update() {
+      if (!gameOver) {
+        this.x += this.speed;
+        this.y += this.curve * Math.sin(this.angle);
+        this.angle += 0.1;
+
+        if (this.x < 0 - this.width) this.markedForDeletion = true;
+      }
+      //animate enemy frames
+      if (gameFrame % this.movementSpeed === 0) {
+        this.frame > 4 ? (this.frame = 0) : this.frame++;
+      }
+    }
+
+    draw() {
+      ctx.drawImage(
+        this.image,
+        this.frame * this.enemyWidth,
+        0,
+        this.enemyWidth,
+        this.enemyHeight,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+    }
+  }
+
+  let explosions = [];
+  class Explosion {
+    constructor(x, y, size) {
+      this.image = new Image();
+      this.image.src = "./Assets/boom.png";
+      this.spriteWidth = 200;
+      this.spriteHeight = 179;
+      this.size = size;
+      this.x = x;
+      this.y = y;
+      this.frame = 0;
+      this.sound = new Audio();
+      this.sound.src = "./Assets/boom8.wav";
+      this.timeSinceLastFrame = 0;
+      this.frameInterval = 200;
+      this.markedForDeletion = false;
+    }
+    update(deltaTime) {
+      if (this.frame === 0) this.sound.play();
+      this.timeSinceLastFrame += deltaTime;
+      if (this.timeSinceLastFrame > this.frameInterval) {
+        this.frame++;
+        if (this.frame > 5) this.markedForDeletion = true;
+      }
+    }
+    draw() {
+      ctx.drawImage(
+        this.image,
+        this.frame * this.spriteWidth,
+        0,
+        this.spriteWidth,
+        this.spriteHeight,
+        this.x,
+        this.y,
+        this.size,
+        this.size
+      );
+    }
+  }
 
   const player = {
     x: 200,
@@ -57,9 +171,12 @@ window.onload = function () {
         distanceX * distanceX + distanceY * distanceY
       );
       if (fullDistance < enemy.enemyWidth / 3 + player.width / 3) {
-        gameOver = true;
+        enemy.markedForDeletion = true;
+        explosions.push(new Explosion(enemy.x, enemy.y, enemy.enemyWidth));
+        score++;
       }
     });
+
     //assign correct asset to each movement
     if (keys[38] === true && player.y > 310) {
       player.y -= player.speed;
@@ -123,85 +240,6 @@ window.onload = function () {
     return player.y >= canvas.height - player.height;
   };
 
-  class Background {
-    constructor(gameWidth, gameHeight) {
-      this.gameWidth = gameWidth;
-      this.gameHeight = gameHeight;
-      this.image = document.getElementById("background");
-      this.x = 0;
-      this.y = 0;
-      this.width = canvas.width;
-      this.height = canvas.height;
-      this.speed = 5;
-    }
-
-    draw(context) {
-      context.drawImage(this.image, this.x, this.y, this.width, this.height);
-      context.drawImage(
-        this.image,
-        this.x + this.width,
-        this.y,
-        this.width,
-        this.height
-      );
-    }
-    update() {
-      this.x -= this.speed;
-      if (this.x < 0 - this.width) this.x = 0;
-    }
-  }
-  const backgroundImage = new Background(canvas.width, canvas.height);
-
-  class Enemy {
-    constructor() {
-      this.y = Math.random() * canvas.height - 100;
-      this.image = new Image();
-      this.image.src = "./Assets/enemy2.png";
-      this.speed = Math.random() * 4 - 2;
-      this.enemyWidth = 133;
-      this.enemyHeight = 94;
-      this.width = this.enemyWidth / 2;
-      this.x = Math.random() * (canvas.width - this.enemyWidth);
-      this.height = this.enemyHeight / 2;
-      this.frame = 0;
-      this.movementSpeed = Math.floor(Math.random() * 3 + 1);
-      this.angle = Math.random() * 2;
-      this.angleSpeed = Math.random() * 0.2;
-      this.curve = Math.random() * 7;
-      this.markedForDeletion = false;
-    }
-    update() {
-      if (!gameOver) {
-        this.x += this.speed;
-        this.y += this.curve * Math.sin(this.angle);
-        this.angle += 0.1;
-        if (this.x + this.width < 0) {
-          this.x = canvas.width;
-          score++;
-        }
-        if (this.x < 0 - this.width) this.markedForDeletion = true;
-      }
-      //animate enemy frames
-      if (gameFrame % this.movementSpeed === 0) {
-        this.frame > 4 ? (this.frame = 0) : this.frame++;
-      }
-    }
-
-    draw() {
-      ctx.drawImage(
-        this.image,
-        this.frame * this.enemyWidth,
-        0,
-        this.enemyWidth,
-        this.enemyHeight,
-        this.x,
-        this.y,
-        this.width,
-        this.height
-      );
-    }
-  }
-
   animate = function (timestamp) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     let deltaTime = timestamp - lastTime;
@@ -209,12 +247,12 @@ window.onload = function () {
     enemyTimer += deltaTime;
     if (enemyTimer > enemyInterval && enemiesArray.length < 10) {
       enemiesArray.push(new Enemy());
-      console.log("enemies:", enemiesArray.length);
     }
-    [...enemiesArray].forEach((enemy) => enemy.update());
-    [...enemiesArray].forEach((enemy) => enemy.draw());
+    [...enemiesArray, ...explosions].forEach((obj) => obj.update(deltaTime));
+    [...enemiesArray, ...explosions].forEach((obj) => obj.draw(deltaTime));
     enemiesArray = enemiesArray.filter((obj) => !obj.markedForDeletion);
-    console.log("deleted:", enemiesArray);
+    explosions = explosions.filter((obj) => !obj.markedForDeletion);
+
     backgroundImage.draw(ctx);
     backgroundImage.update();
     drawSprite(
@@ -290,44 +328,6 @@ window.onload = function () {
       ctx.font = "40px helvetica";
       ctx.fillStyle = "white";
       ctx.fillText("Game Over!", canvas.width / 2, 202);
-    }
-  }
-
-  let explosions = [];
-  class Explosion {
-    constructor(x, y, size) {
-      this.image = new Image();
-      this.image.src = "./Assets/boom.png";
-      this.spriteWidth = 200;
-      this.spriteHeight = 179;
-      this.size = size;
-      this.x = x;
-      this.y = y;
-      this.frame = 0;
-      this.sound = new Audio();
-      this.sound.src = "./Assets/boom8.wav";
-      this.timeSinceLastFrame = 0;
-      this.frameInterval = 200;
-    }
-    update(deltaTime) {
-      if (this.frame === 0) this.sound.play();
-      this.timeSinceLastFrame += deltaTime;
-      if (this.timeSinceLastFrame > this.frameInterval) {
-        this.frame++;
-      }
-    }
-    draw() {
-      ctx.drawImage(
-        this.image,
-        this.frame * this.spriteWidth,
-        0,
-        this.spriteWidth,
-        this.spriteHeight,
-        this.x,
-        this.y,
-        this.size,
-        this.size
-      );
     }
   }
 };
