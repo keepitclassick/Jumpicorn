@@ -308,28 +308,28 @@ window.onload = function () {
 
   function displayStatus() {
     ctx.fillStyle = "black";
-    ctx.font = "40px helvetica";
+    ctx.font = "40px  Orbitron";
     ctx.fillText("Score: " + score, 20, 50);
 
     ctx.fillStyle = "white";
-    ctx.font = "40px helvetica";
+    ctx.font = "40px  Orbitron";
     ctx.fillText("Score: " + score, 20, 52);
 
     ctx.fillStyle = "black";
-    ctx.font = "40px helvetica";
+    ctx.font = "40px  Orbitron";
     ctx.fillText("Lives: " + player.lives, 20, 100);
 
     ctx.fillStyle = "white";
-    ctx.font = "40px helvetica";
+    ctx.font = "40px  Orbitron";
     ctx.fillText("Lives: " + player.lives, 20, 102);
 
     if (gameOver) {
       ctx.textAlign = "center";
-      ctx.font = "40px helvetica";
+      ctx.font = "40px  Orbitron";
       ctx.fillStyle = "black";
       ctx.fillText("Game Over!", canvas.width / 2, 200);
       ctx.textAlign = "center";
-      ctx.font = "40px helvetica";
+      ctx.font = "40px  Orbitron";
       ctx.fillStyle = "white";
       ctx.fillText("Game Over!", canvas.width / 2, 202);
     }
