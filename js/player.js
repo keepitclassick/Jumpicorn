@@ -11,7 +11,6 @@ window.onload = function () {
   let score = 0;
   let gameOver = false;
   let keys = [];
-  let heartsArrary = [];
   gameOverSound = new Audio();
   gameOverSound.src = "./Assets/Icy Game Over.mp3";
   pointSound = new Audio();
@@ -19,6 +18,7 @@ window.onload = function () {
   jumpSound = new Audio();
   jumpSound.src = "./Assets/qubodup-cfork-ccby3-jump.flac";
 
+  //create scrolling repeated background
   class Background {
     constructor(gameWidth, gameHeight) {
       this.gameWidth = gameWidth;
@@ -184,14 +184,14 @@ window.onload = function () {
     //collision detection
     enemies.forEach((enemy) => {
       const distanceX =
-        enemy.x + enemy.enemyWidth / 2 - (player.x + player.width);
+        enemy.x + enemy.enemyWidth / 2 - (player.x + player.playerWidth);
       const distanceY =
-        enemy.y + enemy.enemyHeight / 2 - (player.y + player.height / 2);
+        enemy.y + enemy.enemyHeight / 2 - (player.y + player.playerHeight / 2);
 
       const fullDistance = Math.sqrt(
         distanceX * distanceX + distanceY * distanceY
       );
-      if (fullDistance < enemy.enemyWidth / 3 + player.width / 3) {
+      if (fullDistance < enemy.enemyWidth / 3 + player.playerWidth / 2) {
         enemy.markedForDeletion = true;
         explosions.push(new Explosion(enemy.x, enemy.y, enemy.enemyWidth));
 
