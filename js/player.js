@@ -11,6 +11,7 @@ window.onload = function () {
   let score = 0;
   let gameOver = false;
   let keys = [];
+  let heartsArrary = [];
   gameOverSound = new Audio();
   gameOverSound.src = "./Assets/Icy Game Over.mp3";
   pointSound = new Audio();
@@ -150,8 +151,10 @@ window.onload = function () {
   const player = {
     x: 200,
     y: 650,
-    width: 128,
-    height: 128,
+    width: 575,
+    height: 355,
+    playerWidth: 575 / 3,
+    playerHeight: 355 / 3,
     frameX: 0,
     frameY: 0,
     speed: 10,
@@ -162,7 +165,7 @@ window.onload = function () {
   };
 
   const playerSprite = new Image();
-  playerSprite.src = "./Assets/rainbowuni.png";
+  playerSprite.src = "./Assets/uniwalkright.png";
 
   let drawSprite = function (img, sX, sY, sW, sH, dX, dY, dW, dH) {
     ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
@@ -191,7 +194,6 @@ window.onload = function () {
       if (fullDistance < enemy.enemyWidth / 3 + player.width / 3) {
         enemy.markedForDeletion = true;
         explosions.push(new Explosion(enemy.x, enemy.y, enemy.enemyWidth));
-        console.log(explosions.length);
 
         for (i = 1; i < explosions.length; i++) {
           explosions[i].draw();
@@ -213,6 +215,7 @@ window.onload = function () {
       player.x -= player.speed;
       player.moving = true;
       player.frameY = 0;
+      playerSprite.src = "./Assets/fixed.png";
     }
 
     if (keys[40] === true && player.y < canvas.height - player.height) {
@@ -220,13 +223,13 @@ window.onload = function () {
       player.frameY = 0;
       player.moving = true;
     }
-    if (keys[39] && player.x < canvas.width - player.width) {
+    if (keys[39] && player.x < canvas.width - player.playerWidth) {
       player.x += player.speed;
-      player.frameY = 1;
+      player.frameY = 0;
       player.moving = true;
     }
 
-    if (keys[39] && keys[32] && player.x < canvas.width - player.width) {
+    if (keys[39] && keys[32] && player.x < canvas.width - player.playerWidth) {
       player.x += player.speed;
       player.frameY = 0;
       player.moving = true;
@@ -249,14 +252,14 @@ window.onload = function () {
     }
 
     //add vertical boundary
-    if (player.y > canvas.height - 300) {
-      player.y = canvas.height - 300;
+    if (player.y > canvas.height - 250) {
+      player.y = canvas.height - 250;
     }
   }
 
   //check if player is on the ground
   onGround = () => {
-    return player.y >= canvas.height - 300;
+    return player.y >= canvas.height - 250;
   };
 
   animate = function (timestamp) {
@@ -282,20 +285,23 @@ window.onload = function () {
       player.height,
       player.x,
       player.y,
-      player.width * 2,
-      player.height * 2
+      player.playerWidth,
+      player.playerHeight
     );
+
     ctx.strokeStyle = "white";
     movePlayer(enemiesArray);
     handlePlayerFrame();
     displayStatus(ctx);
     if (!gameOver) requestAnimationFrame(animate);
   };
-  animate(0);
+  animate(2);
 
   function handlePlayerFrame() {
-    if (player.frameX < 3 && player.moving) player.frameX++;
-    else player.frameX = 0;
+    if (player.frameX < 6 && player.moving) {
+      player.frameX++;
+      console.log(player.frameX);
+    } else player.frameX = 0;
   }
 
   //generate enemies
