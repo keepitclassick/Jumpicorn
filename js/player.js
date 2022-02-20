@@ -6,7 +6,6 @@ window.onload = function () {
   let enemyTimer = 0;
   let enemyInterval = 2000;
   let lastTime = 0;
-
   let enemiesArray = [];
   let gameFrame = 0;
   let score = 0;
@@ -152,7 +151,7 @@ window.onload = function () {
     height: 128,
     frameX: 0,
     frameY: 0,
-    speed: 20,
+    speed: 30,
     moving: false,
     velocity: 0,
     weight: 1,
@@ -290,7 +289,7 @@ window.onload = function () {
   animate(0);
 
   function handlePlayerFrame() {
-    if (player.frameX < 7 && player.moving) player.frameX++;
+    if (player.frameX < 3 && player.moving) player.frameX++;
     else player.frameX = 0;
   }
 
@@ -313,7 +312,7 @@ window.onload = function () {
 
     ctx.fillStyle = "white";
     ctx.font = "40px  Orbitron";
-    ctx.fillText("Score: " + score, 20, 52);
+    ctx.fillText("Score: " + score, 20, 54);
 
     ctx.fillStyle = "black";
     ctx.font = "40px  Orbitron";
@@ -321,7 +320,7 @@ window.onload = function () {
 
     ctx.fillStyle = "white";
     ctx.font = "40px  Orbitron";
-    ctx.fillText("Lives: " + player.lives, 20, 102);
+    ctx.fillText("Lives: " + player.lives, 20, 104);
 
     if (gameOver) {
       ctx.textAlign = "center";
@@ -331,7 +330,7 @@ window.onload = function () {
       ctx.textAlign = "center";
       ctx.font = "40px  Orbitron";
       ctx.fillStyle = "white";
-      ctx.fillText("Game Over!", canvas.width / 2, 202);
+      ctx.fillText("Game Over!", canvas.width / 2, 204);
     }
   }
 };
