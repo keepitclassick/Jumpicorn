@@ -6,12 +6,14 @@ window.onload = function () {
   let enemyTimer = 0;
   let enemyInterval = 2000;
   let lastTime = 0;
-  const numberOfEnemies = Math.random() * 10 - 2;
+
   let enemiesArray = [];
   let gameFrame = 0;
   let score = 0;
   let gameOver = false;
   let keys = [];
+  gameOverSound = new Audio();
+  gameOverSound.src = "./Assets/Icy Game Over.mp3";
 
   class Background {
     constructor(gameWidth, gameHeight) {
@@ -56,8 +58,8 @@ window.onload = function () {
       this.frame = 0;
       this.movementSpeed = Math.floor(Math.random() * 3 + 1);
       this.angle = Math.random() * 2;
-      this.angleSpeed = Math.random() * 0.2;
-      this.curve = Math.random() * 7;
+      this.angleSpeed = Math.random() * 0.6;
+      this.curve = Math.random() * 3;
       this.markedForDeletion = false;
     }
     update() {
@@ -78,21 +80,12 @@ window.onload = function () {
       }
       if (player.lives === 0) {
         gameOver = true;
+        gameOverSound.play();
       }
     }
 
     draw() {
-      ctx.drawImage(
-        this.image,
-        this.frame * this.enemyWidth,
-        0,
-        this.enemyWidth,
-        this.enemyHeight,
-        this.x,
-        this.y,
-        this.width,
-        this.height
-      );
+      ctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
     }
   }
 
@@ -113,6 +106,7 @@ window.onload = function () {
       this.frameInterval = 200;
       this.markedForDeletion = false;
     }
+
     update(deltaTime) {
       if (this.frame === 0) this.sound.play();
       this.timeSinceLastFrame += deltaTime;
@@ -141,11 +135,11 @@ window.onload = function () {
   const player = {
     x: 200,
     y: 650,
-    width: 64,
-    height: 170,
+    width: 128,
+    height: 128,
     frameX: 0,
     frameY: 0,
-    speed: 9,
+    speed: 20,
     moving: false,
     velocity: 0,
     weight: 1,
@@ -153,7 +147,7 @@ window.onload = function () {
   };
 
   const playerSprite = new Image();
-  playerSprite.src = "./Assets/idle.png";
+  playerSprite.src = "./Assets/rainbowuni.png";
 
   let drawSprite = function (img, sX, sY, sW, sH, dX, dY, dW, dH) {
     ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
@@ -192,34 +186,29 @@ window.onload = function () {
       player.frameY = 0;
       console.log(keys);
       player.moving = true;
-      playerSprite.src = "./Assets/jump.png";
     }
 
     if (keys[37] === true && player.x > 0) {
       player.x -= player.speed;
       player.moving = true;
       player.frameY = 0;
-      playerSprite.src = "./Assets/walk (1).png";
     }
 
     if (keys[40] === true && player.y < canvas.height - player.height) {
       player.y += player.speed;
       player.frameY = 0;
       player.moving = true;
-      playerSprite.src = "./Assets/fall.png";
     }
     if (keys[39] && player.x < canvas.width - player.width) {
       player.x += player.speed;
-      player.frameY = 0;
+      player.frameY = 1;
       player.moving = true;
-      playerSprite.src = "./Assets/walk (1).png";
     }
 
     if (keys[39] && keys[32] && player.x < canvas.width - player.width) {
       player.x += player.speed;
       player.frameY = 0;
       player.moving = true;
-      playerSprite.src = "./Assets/run.png";
     }
 
     if (keys[32] && onGround()) {
@@ -227,7 +216,6 @@ window.onload = function () {
       player.frameY = 0;
       player.moving = true;
       player.velocity = -30;
-      playerSprite.src = "./Assets/jump.png";
     }
 
     //vertical movement
@@ -258,7 +246,7 @@ window.onload = function () {
       enemiesArray.push(new Enemy());
     }
     [...enemiesArray, ...explosions].forEach((obj) => obj.update(deltaTime));
-    [...enemiesArray, ...explosions].forEach((obj) => obj.draw());
+    [...enemiesArray, ...explosions].forEach((obj) => obj.draw(deltaTime));
     enemiesArray = enemiesArray.filter((obj) => !obj.markedForDeletion);
     explosions = explosions.filter((obj) => !obj.markedForDeletion);
 
