@@ -46,10 +46,10 @@ window.onload = function () {
 
   class Enemy {
     constructor() {
-      this.y = Math.random() * canvas.height - 100;
+      this.y = Math.random() * (canvas.height - 100) - 200;
       this.image = new Image();
       this.image.src = "./Assets/enemy2.png";
-      this.speed = Math.random() * 4 - 2;
+      this.speed = Math.random() * 3 - 2;
       this.enemyWidth = 133;
       this.enemyHeight = 94;
       this.width = this.enemyWidth / 2;
@@ -57,9 +57,9 @@ window.onload = function () {
       this.height = this.enemyHeight / 2;
       this.frame = 0;
       this.movementSpeed = Math.floor(Math.random() * 3 + 1);
-      this.angle = Math.random() / 2;
+      this.angle = Math.random() * 2;
       this.angleSpeed = Math.random() * 0.6;
-      this.curve = Math.random() / 3;
+      this.curve = Math.random() * 3;
       this.markedForDeletion = false;
     }
     update() {
@@ -147,7 +147,7 @@ window.onload = function () {
 
   const player = {
     x: 200,
-    y: 400,
+    y: 650,
     width: 128,
     height: 128,
     frameX: 0,
@@ -163,7 +163,7 @@ window.onload = function () {
   playerSprite.src = "./Assets/rainbowuni.png";
 
   let drawSprite = function (img, sX, sY, sW, sH, dX, dY, dW, dH) {
-    ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW * 2, dH * 2);
+    ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
   };
 
   window.addEventListener("keydown", (e) => {
@@ -245,14 +245,14 @@ window.onload = function () {
     }
 
     //add vertical boundary
-    if (player.y > canvas.height - player.height) {
-      player.y = canvas.height - player.height;
+    if (player.y > canvas.height - 300) {
+      player.y = canvas.height - 300;
     }
   }
 
   //check if player is on the ground
   onGround = () => {
-    return player.y >= canvas.height - player.height;
+    return player.y >= canvas.height - 300;
   };
 
   animate = function (timestamp) {
@@ -278,8 +278,8 @@ window.onload = function () {
       player.height,
       player.x,
       player.y,
-      player.width,
-      player.height
+      player.width * 2,
+      player.height * 2
     );
     ctx.strokeStyle = "white";
     movePlayer(enemiesArray);
