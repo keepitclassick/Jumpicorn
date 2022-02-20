@@ -57,9 +57,9 @@ window.onload = function () {
       this.height = this.enemyHeight / 2;
       this.frame = 0;
       this.movementSpeed = Math.floor(Math.random() * 3 + 1);
-      this.angle = Math.random() * 2;
+      this.angle = Math.random() / 2;
       this.angleSpeed = Math.random() * 0.6;
-      this.curve = Math.random() * 3;
+      this.curve = Math.random() / 3;
       this.markedForDeletion = false;
     }
     update() {
@@ -85,7 +85,17 @@ window.onload = function () {
     }
 
     draw() {
-      ctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+      ctx.drawImage(
+        this.image,
+        this.frame * this.enemyWidth,
+        0,
+        this.enemyWidth,
+        this.enemyHeight,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
     }
   }
 
@@ -99,24 +109,27 @@ window.onload = function () {
       this.size = size;
       this.x = x;
       this.y = y;
+      this.width = this.spriteWidth / 2;
+      this.height = this.spriteHeight / 2;
       this.frame = 0;
       this.sound = new Audio();
       this.sound.src = "./Assets/boom8.wav";
       this.timeSinceLastFrame = 0;
-      this.frameInterval = 200;
+      this.timer = 0;
       this.markedForDeletion = false;
     }
 
     update(deltaTime) {
       if (this.frame === 0) this.sound.play();
       this.timeSinceLastFrame += deltaTime;
-      if (this.timeSinceLastFrame > this.frameInterval) {
+      if (this.timer % 100 === 0) {
         this.frame++;
       }
       if (this.frame > 5) {
         this.markedForDeletion = true;
       }
     }
+
     draw() {
       ctx.drawImage(
         this.image,
@@ -126,15 +139,15 @@ window.onload = function () {
         this.spriteHeight,
         this.x,
         this.y,
-        this.size,
-        this.size
+        this.width,
+        this.height
       );
     }
   }
 
   const player = {
     x: 200,
-    y: 650,
+    y: 400,
     width: 128,
     height: 128,
     frameX: 0,
@@ -150,7 +163,7 @@ window.onload = function () {
   playerSprite.src = "./Assets/rainbowuni.png";
 
   let drawSprite = function (img, sX, sY, sW, sH, dX, dY, dW, dH) {
-    ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
+    ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW * 2, dH * 2);
   };
 
   window.addEventListener("keydown", (e) => {
@@ -176,6 +189,11 @@ window.onload = function () {
       if (fullDistance < enemy.enemyWidth / 3 + player.width / 3) {
         enemy.markedForDeletion = true;
         explosions.push(new Explosion(enemy.x, enemy.y, enemy.enemyWidth));
+        console.log(explosions.length);
+
+        for (i = 1; i < explosions.length; i++) {
+          explosions[i].draw();
+        }
         score++;
       }
     });
@@ -264,18 +282,6 @@ window.onload = function () {
       player.height
     );
     ctx.strokeStyle = "white";
-
-    /*ctx.beginPath();
-    ctx.ellipse(
-      player.x + player.width / 2,
-      player.y + player.height / 2,
-      player.width / 2.5,
-      player.height / 3.5,
-      Math.PI / 200,
-      0,
-      2 * Math.PI
-    );
-    ctx.stroke();*/
     movePlayer(enemiesArray);
     handlePlayerFrame();
     displayStatus(ctx);
