@@ -13,6 +13,10 @@ window.onload = function () {
   let keys = [];
   gameOverSound = new Audio();
   gameOverSound.src = "./Assets/Icy Game Over.mp3";
+  pointSound = new Audio();
+  pointSound.src = "./Assets/shimmer_1.flac";
+  jumpSound = new Audio();
+  jumpSound.src = "./Assets/qubodup-cfork-ccby3-jump.flac";
 
   class Background {
     constructor(gameWidth, gameHeight) {
@@ -119,7 +123,6 @@ window.onload = function () {
     }
 
     update(deltaTime) {
-      if (this.frame === 0) this.sound.play();
       this.timeSinceLastFrame += deltaTime;
       if (this.timer % 100 === 0) {
         this.frame++;
@@ -151,7 +154,7 @@ window.onload = function () {
     height: 128,
     frameX: 0,
     frameY: 0,
-    speed: 30,
+    speed: 10,
     moving: false,
     velocity: 0,
     weight: 1,
@@ -194,6 +197,7 @@ window.onload = function () {
           explosions[i].draw();
         }
         score++;
+        pointSound.play();
       }
     });
 
@@ -233,6 +237,7 @@ window.onload = function () {
       player.frameY = 0;
       player.moving = true;
       player.velocity = -30;
+      jumpSound.play();
     }
 
     //vertical movement
