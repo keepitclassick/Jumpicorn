@@ -105,38 +105,40 @@ window.onload = function () {
 
   let explosions = [];
   class Explosion {
-    constructor(x, y, size) {
+    constructor(x, y) {
       this.image = new Image();
       this.image.src = "./Assets/boom.png";
       this.spriteWidth = 200;
       this.spriteHeight = 179;
-      this.size = size;
       this.x = x;
       this.y = y;
       this.width = this.spriteWidth / 2;
       this.height = this.spriteHeight / 2;
-      this.frame = 0;
+      this.frameX = 0;
+      this.maxFrame = 4;
       this.sound = new Audio();
       this.sound.src = "./Assets/boom8.wav";
-      this.timeSinceLastFrame = 0;
       this.timer = 0;
       this.markedForDeletion = false;
+      this.fps = 600;
+      this.frameTimer = 0;
+      this.frameInterval = 1000 / this.fps;
     }
 
     update(deltaTime) {
-      this.timeSinceLastFrame += deltaTime;
-      if (this.timer % 100 === 0) {
-        this.frame++;
-      }
-      if (this.frame > 5) {
-        this.markedForDeletion = true;
+      if (this.frameTimer > this.frameInterval) {
+        if (this.frameX > this.maxFrame) this.frameX = 0;
+        else this.frameX++;
+        this.frameTimer = 0;
+      } else {
+        this.frameTimer += deltaTime;
       }
     }
 
     draw() {
       ctx.drawImage(
         this.image,
-        this.frame * this.spriteWidth,
+        this.frameX * this.spriteWidth,
         0,
         this.spriteWidth,
         this.spriteHeight,
@@ -193,10 +195,12 @@ window.onload = function () {
       );
       if (fullDistance < enemy.enemyWidth / 3 + player.playerWidth / 2) {
         enemy.markedForDeletion = true;
-        explosions.push(new Explosion(enemy.x, enemy.y, enemy.enemyWidth));
+        explosions.push(new Explosion(enemy.x, enemy.y));
 
         for (i = 1; i < explosions.length; i++) {
           explosions[i].draw();
+          explosions[i].update();
+          explosions = explosions.filter((obj) => !obj.markedForDeletion);
         }
         score++;
         pointSound.play();
@@ -227,6 +231,7 @@ window.onload = function () {
       player.x += player.speed;
       player.frameY = 0;
       player.moving = true;
+      playerSprite.src = "./Assets/uniwalkright.png";
     }
 
     if (keys[39] && keys[32] && player.x < canvas.width - player.playerWidth) {
@@ -240,6 +245,9 @@ window.onload = function () {
       player.frameY = 0;
       player.moving = true;
       player.velocity = -30;
+      player.width = 520;
+      playerSprite.src = "./Assets/jump.png";
+
       jumpSound.play();
     }
 
@@ -271,9 +279,8 @@ window.onload = function () {
       enemiesArray.push(new Enemy());
     }
     [...enemiesArray, ...explosions].forEach((obj) => obj.update(deltaTime));
-    [...enemiesArray, ...explosions].forEach((obj) => obj.draw(deltaTime));
+    [...enemiesArray, ...explosions].forEach((obj) => obj.draw(ctx));
     enemiesArray = enemiesArray.filter((obj) => !obj.markedForDeletion);
-    explosions = explosions.filter((obj) => !obj.markedForDeletion);
 
     backgroundImage.draw(ctx);
     backgroundImage.update();
@@ -297,8 +304,8 @@ window.onload = function () {
   };
   animate(2);
 
-  function handlePlayerFrame() {
-    if (player.frameX < 6 && player.moving) {
+  function handlePlayerFrame(frameMax) {
+    if (player.frameX < frameMax && player.moving) {
       player.frameX++;
       console.log(player.frameX);
     } else player.frameX = 0;
@@ -323,7 +330,7 @@ window.onload = function () {
 
     ctx.fillStyle = "white";
     ctx.font = "40px  Orbitron";
-    ctx.fillText("Score: " + score, 20, 54);
+    ctx.fillText("Score: " + score, 20, 52);
 
     ctx.fillStyle = "black";
     ctx.font = "40px  Orbitron";
@@ -331,17 +338,17 @@ window.onload = function () {
 
     ctx.fillStyle = "white";
     ctx.font = "40px  Orbitron";
-    ctx.fillText("Lives: " + player.lives, 20, 104);
+    ctx.fillText("Lives: " + player.lives, 20, 102);
 
     if (gameOver) {
       ctx.textAlign = "center";
-      ctx.font = "40px  Orbitron";
+      ctx.font = "70px  Orbitron";
       ctx.fillStyle = "black";
       ctx.fillText("Game Over!", canvas.width / 2, 200);
       ctx.textAlign = "center";
-      ctx.font = "40px  Orbitron";
+      ctx.font = "70px  Orbitron";
       ctx.fillStyle = "white";
-      ctx.fillText("Game Over!", canvas.width / 2, 204);
+      ctx.fillText("Game Over!", canvas.width / 2, 202);
     }
   }
 };
