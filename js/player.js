@@ -11,8 +11,6 @@ window.onload = function () {
   let score = 0;
   let gameOver = false;
   let keys = [];
-  gameOverSound = new Audio();
-  gameOverSound.src = "./Assets/Icy Game Over.mp3";
   pointSound = new Audio();
   pointSound.src = "./Assets/shimmer_1.flac";
   jumpSound = new Audio();
@@ -84,7 +82,6 @@ window.onload = function () {
       }
       if (player.lives === 0) {
         gameOver = true;
-        gameOverSound.play();
       }
     }
 
@@ -197,6 +194,9 @@ window.onload = function () {
         [...explosions].forEach((obj) => obj.draw());
         console.log("before:", explosions);
         score++;
+        if (score > 5 && score % 5 === 0) {
+          player.lives++;
+        }
         pointSound.play();
       }
     });
@@ -300,6 +300,7 @@ window.onload = function () {
     movePlayer(enemiesArray);
     handlePlayerFrame();
     displayStatus(ctx);
+
     if (!gameOver) requestAnimationFrame(animate);
   };
   animate(2);
@@ -362,15 +363,5 @@ window.onload = function () {
       ctx.fillStyle = "white";
       ctx.fillText("Winner!", canvas.width / 2, 202);
     }
-  }
-
-  const resetGame = () => {
-    player.lives = 5;
-    score = 0;
-    gameOver = false;
-  };
-
-  if (gameOver && keys[32]) {
-    resetGame();
   }
 };
