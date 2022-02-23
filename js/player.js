@@ -153,7 +153,7 @@ window.onload = function () {
     playerHeight: 355 / 3,
     frameX: 0,
     frameY: 0,
-    speed: 20,
+    speed: 10,
     moving: false,
     velocity: 0,
     weight: 1,
