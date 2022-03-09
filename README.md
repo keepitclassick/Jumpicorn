@@ -12,3 +12,6 @@ Built with vanilla JavaScript, HTML, and CSS. Through this project, I learned ho
 ![screenshot of Game Over](https://raw.githubusercontent.com/keepitclassick/platformer/c2c7e611341031952cad9b9add74fc32134efc2f/Screenshots/F89E3755-CC1D-4550-9D2A-39680FB84E02_1_105_c.jpeg)
 
 ![screenshot of Win](https://raw.githubusercontent.com/keepitclassick/platformer/c2c7e611341031952cad9b9add74fc32134efc2f/Screenshots/58CC49E8-2504-46F5-A049-89D112E69389_1_105_c.jpeg)
+
+
+![gif of play](https://github.com/keepitclassick/Portfolio/blob/main/assets/Jumpicorn.gif?raw=true)
